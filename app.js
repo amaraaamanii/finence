@@ -45,16 +45,41 @@ var data = {
         inc: 0,
         exp: 0
     }
+
 }
 
+return {
+    items: function (type, desc, val){
+        var item, id;
+
+        if(data.item[type].lenght === 0 ) id = 1;
+        else {
+            id = data.item[type][data.item[type].lenght - 1].id + 1
+        }
+
+        if(type === 'inc') {
+            item = new Income(id, desc, val);
+        } else {
+            item = new Expense(id, desc, val);
+        }
+
+        data.items[type].push(item);
+    },
+    seeData: function (){
+        return data;
+    }
+};
 
 })();
 //Програмын холбогч контроллер
 var appController = (function(uiController, financeController) {
     var ctrlAddItem = function(){
         //дэлгэцнээс оруулсан өгөгдлийг олж авна
-    console.log(uiController.getInput());
+    var input = uiController.getInput();
+
+    console.log(input);
     // олж авсан өгөгдлөө санхүүгийн контроллерт дамжуулан тэнд хадгална
+    financeController.items(input.type, input.description, input.value);
     //олж авсан өгөгдлөө тохирох хэсэгт дэлгэцэнд гаргана
     //төсвийг тооцно
     // эцийн үдэгдэл тооцоог дэлгэцэнд гаргана
