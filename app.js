@@ -6,7 +6,12 @@ var uiController = (function() {
       inputValue: ".add__value",
       addBtn: ".add__btn",
       incomelist: ".income__list",
-      expenseslist: ".expenses__list"
+      expenseslist: ".expenses__list",
+      tusuvLabel: ".budget__value",
+      incomeLabel: ".budget__income--value",
+      expenseLabel: ".budget__expenses--value",
+      persentageLabel: ".budget__expenses--percentage"
+      
     };
   
     return {
@@ -35,12 +40,19 @@ var uiController = (function() {
         });
   
         fieldsArr[0].focus();
-        // for(var i = 0; i < fieldsArr.length; i ++ ){
-        //   fieldsArr[i].value = "";
-        // }
-
       },
-  
+
+      tusviigUzuuleh: function (tusuv){
+        document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
+        document.querySelector(DOMstrings.incomeLabel).textContent = tusuv.totalInc;
+        document.querySelector(DOMstrings.expenseLabel).textContent = tusuv.totalExp;
+        if (tusuv.huvi !== 0) {
+          document.querySelector(DOMstrings.persentageLabel).textContent = tusuv.huvi + "%";
+        } else {
+          document.querySelector(DOMstrings.persentageLabel).textContent = tusuv.huvi;
+        }
+      },
+      
       addListItem: function(item, type) {
     //орлого зарлагын элементийг агуулсан html-ийг бэлтгэнэ
     var html, list;
@@ -110,7 +122,8 @@ var financeController = (function() {
           calculateTotal("exp");
 
           data.tusuv = data.totals.inc - data.totals.exp;
-          data.huvi = Math.round((data.totals.exp/data.totals.inc)*100) + "%";
+          data.huvi = Math.round((data.totals.exp / data.totals.inc) * 100);
+        
         },
 
         tusviigAvah: function(){
@@ -168,7 +181,7 @@ var appController = (function(uiController, financeController) {
     // эцийн үдэгдэл тооцох
         var tusuv = financeController.tusviigAvah();
     //дэлгэцэнд гаргана
-    console.log(tusuv);
+      uiController.tusviigUzuuleh(tusuv);
 };
   
 var setupEventListeners = function() {
@@ -189,6 +202,14 @@ var setupEventListeners = function() {
 return {
   init: function() {
     console.log("Application started...");
+    uiController.tusviigUzuuleh(
+      {
+        tusuv: 0,
+        huvi: 0,
+        totalInc: 0,
+        totalExp: 0
+      }
+    )
     setupEventListeners();
   }
 };
